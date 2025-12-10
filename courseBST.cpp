@@ -9,20 +9,29 @@ CourseBST::~CourseBST() {
 
 CourseNode* CourseBST::insertRec(CourseNode* node, const Course& c) {
     if (!node) return new CourseNode(c);
-    if (c.code < node->data.code) node->left = insertRec(node->left, c);
-    else if (c.code > node->data.code) node->right = insertRec(node->right, c);
-    // ignore duplicates
+    if (c.code < node->data.code) {
+        node->left = insertRec(node->left, c);
+    }
+    else if (c.code > node->data.code){
+        node->right = insertRec(node->right, c);
+    }
     return node;
 }
 
 CourseNode* CourseBST::searchRec(CourseNode* node, const std::string& code) const {
-    if (!node || node->data.code == code) return node;
-    if (code < node->data.code) return searchRec(node->left, code);
+    if (!node || node->data.code == code) {
+        return node;
+    }
+    if (code < node->data.code){
+        return searchRec(node->left, code);
+    }
     return searchRec(node->right, code);
 }
 
 void CourseBST::inorderRec(CourseNode* node) const {
-    if (!node) return;
+    if (!node) {
+        return;
+    }
     inorderRec(node->left);
     std::cout << node->data.code << " - " << node->data.name
               << " (" << node->data.day << " " << node->data.time << ")\n";
@@ -30,7 +39,9 @@ void CourseBST::inorderRec(CourseNode* node) const {
 }
 
 void CourseBST::freeRec(CourseNode* node) {
-    if (!node) return;
+    if (!node) {
+        return;
+    }
     freeRec(node->left);
     freeRec(node->right);
     delete node;

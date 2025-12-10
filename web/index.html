@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Campus Pathfinder & Planner</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Campus Pathfinder & Planner</h1>
+    <p>Final Project Demo – Data Structures & Algorithms</p>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-button active" data-target="overview">Overview</button>
+    <button class="tab-button" data-target="map">Campus Map (Graph)</button>
+    <button class="tab-button" data-target="schedule">Schedule & Courses</button>
+  </nav>
+
+  <main>
+    <!-- OVERVIEW -->
+    <section id="overview" class="tab-section active">
+      <h2>Project Overview</h2>
+      <p>
+        This project simulates tools a student might use to navigate campus and plan their
+        schedule. Under the hood, the C++ version of this project uses:
+      </p>
+      <ul>
+        <li><strong>Lists</strong> – daily course schedules</li>
+        <li><strong>Stacks & Queues</strong> – DFS, BFS and path reconstruction</li>
+        <li><strong>Hash Tables</strong> – fast building & course lookup</li>
+        <li><strong>Binary Search Tree (BST)</strong> – courses sorted by code</li>
+        <li><strong>Graphs</strong> – campus buildings and connections</li>
+        <li><strong>Merge Sort & Binary Search</strong> – course listing & search</li>
+        <li><strong>Dijkstra’s Algorithm</strong> – shortest path between buildings</li>
+      </ul>
+      <p>
+        Use the tabs above to try the <strong>Campus Map</strong> and <strong>Schedule</strong>
+        features in this browser demo.
+      </p>
+    </section>
+
+    <!-- CAMPUS MAP / GRAPH -->
+    <section id="map" class="tab-section">
+      <h2>Campus Map – Graph & Pathfinding</h2>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Add Building</h3>
+          <label>
+            Building name
+            <input type="text" id="buildingName" placeholder="Library" />
+          </label>
+          <button id="addBuildingBtn">Add Building</button>
+          <p class="hint">Stored in a graph using an adjacency list.</p>
+        </div>
+
+        <div class="card">
+          <h3>Add Path</h3>
+          <label>
+            From
+            <input type="text" id="pathFrom" placeholder="Library" />
+          </label>
+          <label>
+            To
+            <input type="text" id="pathTo" placeholder="Gym" />
+          </label>
+          <label>
+            Distance
+            <input type="number" step="0.1" id="pathDistance" placeholder="0.5" />
+          </label>
+          <button id="addPathBtn">Add Path</button>
+          <p class="hint">Edges are undirected with a weight (distance).</p>
+        </div>
+
+        <div class="card">
+          <h3>Buildings</h3>
+          <button id="listBuildingsBtn">List Buildings</button>
+          <pre id="buildingsOutput" class="output"></pre>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Paths</h3>
+          <button id="listPathsBtn">List Paths</button>
+          <pre id="pathsOutput" class="output"></pre>
+        </div>
+
+        <div class="card">
+          <h3>BFS & DFS Traversal</h3>
+          <label>
+            Start building
+            <input type="text" id="traversalStart" placeholder="Dorm" />
+          </label>
+          <button id="bfsBtn">Run BFS</button>
+          <button id="dfsBtn">Run DFS</button>
+          <pre id="traversalOutput" class="output"></pre>
+          <p class="hint">
+            BFS uses a <strong>queue</strong>, DFS uses a <strong>stack</strong>.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Shortest Path (Dijkstra)</h3>
+          <label>
+            From
+            <input type="text" id="shortestFrom" placeholder="Dorm" />
+          </label>
+          <label>
+            To
+            <input type="text" id="shortestTo" placeholder="Library" />
+          </label>
+          <button id="shortestBtn">Find Shortest Path</button>
+          <pre id="shortestOutput" class="output"></pre>
+          <p class="hint">
+            Uses Dijkstra’s algorithm and a stack to rebuild the path.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCHEDULE & COURSES -->
+    <section id="schedule" class="tab-section">
+      <h2>Schedule & Courses</h2>
+
+      <div class="grid">
+        <!-- ADD COURSE -->
+        <div class="card">
+          <h3>Add Course</h3>
+          <label>
+            Code
+            <input type="text" id="courseCode" placeholder="CS101" />
+          </label>
+          <label>
+            Name
+            <input type="text" id="courseName" placeholder="Intro to CS" />
+          </label>
+          <label>
+            Days (comma-separated, e.g., Mon,Wed,Fri)
+            <input type="text" id="courseDays" placeholder="Mon,Wed,Fri" />
+          </label>
+          <label>
+            Time
+            <div class="time-row">
+              <input type="text" id="courseTime" placeholder="10:00" />
+              <select id="courseAmPm">
+                <option value="AM">AM</option>
+                <option value="PM">PM</option>
+              </select>
+            </div>
+          </label>
+          <button id="addCourseBtn">Add Course</button>
+          <p class="hint">
+            In C++ this is stored in a <strong>list</strong> and a <strong>BST</strong>.
+          </p>
+        </div>
+
+        <!-- SHOW SCHEDULE -->
+        <div class="card">
+          <h3>Show Schedule for a Day</h3>
+          <label>
+            Day
+            <input type="text" id="showDayInput" placeholder="Mon" />
+          </label>
+          <button id="showDayBtn">Show Schedule</button>
+          <pre id="dayScheduleOutput" class="output"></pre>
+        </div>
+
+        <!-- SORT + SEARCH -->
+        <div class="card">
+          <h3>All Courses (Merge Sort + Binary Search)</h3>
+          <button id="listCoursesSortedBtn">List Sorted Courses</button>
+          <pre id="sortedCoursesOutput" class="output"></pre>
+
+          <label>
+            Search by code
+            <input type="text" id="searchCourseCode" placeholder="CS101" />
+          </label>
+          <button id="searchCourseBtn">Binary Search</button>
+          <pre id="searchCourseOutput" class="output"></pre>
+        </div>
+
+        <!-- REMOVE COURSE -->
+        <div class="card">
+          <h3>Remove Course</h3>
+          <label>
+            Course code
+            <input type="text" id="removeCourseCode" placeholder="CS101" />
+          </label>
+          <button id="removeCourseBtn">Remove by Code (all days)</button>
+          <pre id="removeCourseOutput" class="output"></pre>
+          <p class="hint">
+            Removes this course from the master list and from all day schedules.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built with HTML, CSS, JavaScript – C++ version uses STL & classic data structures.</p>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

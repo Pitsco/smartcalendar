@@ -2,23 +2,25 @@
 #include <vector>
 #include <limits>
 
-#include "Graph.h"
+#include "graph.h"
 #include "ScheduleManager.h"
-#include "CourseBST.h"
-#include "Course.h"
+#include "courseBST.h"
+#include "course.h"
 
 void printMenu() {
     std::cout << "\n==== Campus Pathfinder & Planner ====\n";
     std::cout << "1. Add building\n";
     std::cout << "2. Add path between buildings\n";
-    std::cout << "3. List buildings\n";
-    std::cout << "4. Run BFS from building\n";
-    std::cout << "5. Run DFS from building\n";
-    std::cout << "6. Find shortest path between buildings\n";
-    std::cout << "7. Add course to schedule\n";
-    std::cout << "8. Show schedule for a day\n";
-    std::cout << "9. List all courses (BST in-order)\n";
-    std::cout << "10. List all courses sorted by code (merge sort + binary search demo)\n";
+    std::cout << "3. Remove path between buildings\n";
+    std::cout << "4. List buildings\n";
+    std::cout << "5. List all paths\n";
+    std::cout << "6. Run BFS from building\n";
+    std::cout << "7. Run DFS from building\n";
+    std::cout << "8. Find shortest path between buildings\n";
+    std::cout << "9. Add course to schedule\n";
+    std::cout << "10. Show schedule for a day\n";
+    std::cout << "11. List all courses (BST in-order)\n";
+    std::cout << "12. List all courses sorted by code (merge sort + binary search demo)\n";
     std::cout << "0. Exit\n";
     std::cout << "Select option: ";
 }
@@ -27,9 +29,9 @@ int main() {
     Graph graph;
     ScheduleManager schedule;
     CourseBST bst;
-    std::vector<Course> allCourses; // for sorting + binary search
+    std::vector<Course> allCourses;
 
-    // Optional: preload some sample data
+    // sample data
     graph.addPath("Library", "Cafeteria", 5);
     graph.addPath("Library", "Gym", 7);
     graph.addPath("Gym", "Dorm", 3);
@@ -62,23 +64,35 @@ int main() {
             std::cout << "Path added.\n";
         }
         else if (choice == 3) {
-            graph.listBuildings();
+            std::string from, to;
+            std::cout << "From building: ";
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::getline(std::cin, from);
+            std::cout << "To building: ";
+            std::getline(std::cin, to);
+            graph.removePath(from, to);
         }
         else if (choice == 4) {
+            graph.listBuildings();
+        }
+        else if (choice == 5) {
+            graph.listPaths();
+        }
+        else if (choice == 6) {
             std::string start;
             std::cout << "Start building name: ";
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::getline(std::cin, start);
             graph.bfs(start);
         }
-        else if (choice == 5) {
+        else if (choice == 7) {
             std::string start;
             std::cout << "Start building name: ";
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::getline(std::cin, start);
             graph.dfs(start);
         }
-        else if (choice == 6) {
+        else if (choice == 8) {
             std::string from, to;
             std::cout << "From building: ";
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -87,7 +101,7 @@ int main() {
             std::getline(std::cin, to);
             graph.shortestPath(from, to);
         }
-        else if (choice == 7) {
+        else if (choice == 9) {
             Course c;
             std::cout << "Course code: ";
             std::cin >> c.code;
@@ -107,17 +121,17 @@ int main() {
             allCourses.push_back(c);
             std::cout << "Course added.\n";
         }
-        else if (choice == 8) {
+        else if (choice == 10) {
             std::string day;
             std::cout << "Enter day (e.g., Mon): ";
             std::cin >> day;
             schedule.showDay(day);
         }
-        else if (choice == 9) {
+        else if (choice == 11) {
             std::cout << "Courses (BST in-order by code):\n";
             bst.printInOrder();
         }
-        else if (choice == 10) {
+        else if (choice == 12) {
             if (allCourses.empty()) {
                 std::cout << "No courses available.\n";
                 continue;

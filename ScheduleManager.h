@@ -7,13 +7,12 @@
 #include "Course.h"
 
 class ScheduleManager {
-private:
-    // day -> list of courses (linked list)
-    std::unordered_map<std::string, std::list<Course>> scheduleByDay;
+private: 
+    std::unordered_map<std::string, std::list<Course>> scheduleByDay; //linked list
 
 public:
     void addCourse(const Course& c);
     void showDay(const std::string& day) const;
 };
 
-#endif // SCHEDULEMANAGER_H
+#endif 

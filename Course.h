@@ -7,12 +7,11 @@
 struct Course {
     std::string code;
     std::string name;
-    std::string day;   // e.g., "Mon", "Tue"
-    std::string time;  // e.g., "10:00"
+    std::string day; 
+    std::string time; 
 };
 
-// Sorting & searching algorithms for Course
 void mergeSort(std::vector<Course>& arr, int l, int r);
 int binarySearchCourse(const std::vector<Course>& arr, const std::string& code);
 
-#endif // COURSE_H
+#endif

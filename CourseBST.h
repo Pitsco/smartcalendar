@@ -1,6 +1,7 @@
 #ifndef COURSEBST_H
 #define COURSEBST_H
 
+#include <string>
 #include "Course.h"
 
 struct CourseNode {
@@ -25,7 +26,7 @@ public:
     ~CourseBST();
 
     void insert(const Course& c);
-    CourseNode* search(const std::string& code) const;
+    CourseNode* search(const std::string& code) const;  // <- important: const
     void printInOrder() const;
 };
 

@@ -1,9 +1,10 @@
-#include "Graph.h"
+#include "graph.h"
 #include <iostream>
 #include <queue>
 #include <stack>
 #include <limits>
 #include <functional>
+#include <algorithm>   // for std::remove_if
 
 Graph::Graph() {}
 
@@ -26,10 +27,60 @@ void Graph::addPath(const std::string& from, const std::string& to, int distance
     adj[v].push_back({u, distance});
 }
 
+void Graph::removePath(const std::string& from, const std::string& to) {
+    int u = getId(from);
+    int v = getId(to);
+    if (u == -1 || v == -1) {
+        std::cout << "Unknown building name(s).\n";
+        return;
+    }
+
+    auto removeEdge = [&](int a, int b) {
+        auto &vec = adj[a];
+        vec.erase(
+            std::remove_if(vec.begin(), vec.end(),
+                           [b](const std::pair<int,int>& e) { return e.first == b; }),
+            vec.end()
+        );
+    };
+
+    std::size_t beforeU = adj[u].size();
+    std::size_t beforeV = adj[v].size();
+
+    removeEdge(u, v);
+    removeEdge(v, u);
+
+    if (adj[u].size() == beforeU && adj[v].size() == beforeV) {
+        std::cout << "No path existed between " << from
+                  << " and " << to << ".\n";
+    } else {
+        std::cout << "Path removed between " << from
+                  << " and " << to << ".\n";
+    }
+}
+
 void Graph::listBuildings() const {
     std::cout << "Buildings in campus map:\n";
     for (const auto& b : buildings) {
         std::cout << "  [" << b.id << "] " << b.name << "\n";
+    }
+}
+
+void Graph::listPaths() const {
+    std::cout << "Paths in campus map:\n";
+    bool any = false;
+    for (std::size_t u = 0; u < adj.size(); ++u) {
+        for (auto [v, w] : adj[u]) {
+            // undirected graph: only print each edge once
+            if (u < static_cast<std::size_t>(v)) {
+                any = true;
+                std::cout << "  " << buildings[u].name << " <-> "
+                          << buildings[v].name << " (distance " << w << ")\n";
+            }
+        }
+    }
+    if (!any) {
+        std::cout << "  (no paths yet)\n";
     }
 }
 
@@ -55,7 +106,7 @@ void Graph::bfs(const std::string& startName) const {
         int u = q.front(); q.pop();
         std::cout << buildings[u].name << " ";
         for (auto [v, w] : adj[u]) {
-            (void)w; // weight unused in BFS
+            (void)w;
             if (!visited[v]) {
                 visited[v] = true;
                 q.push(v);
@@ -102,7 +153,7 @@ void Graph::shortestPath(const std::string& from, const std::string& to) const {
     std::vector<int> parent(n, -1);
     dist[src] = 0;
 
-    using P = std::pair<int,int>; // (dist, node)
+    using P = std::pair<int,int>;
     std::priority_queue<P, std::vector<P>, std::greater<P>> pq;
     pq.push({0, src});
 
