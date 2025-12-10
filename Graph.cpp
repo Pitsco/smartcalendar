@@ -85,7 +85,9 @@ void Graph::listPaths() const {
 
 int Graph::getId(const std::string& name) const {
     auto it = nameToId.find(name);
-    if (it == nameToId.end()) return -1;
+    if (it == nameToId.end()) {
+        return -1;
+    }
     return it->second;
 }
 
@@ -128,12 +130,16 @@ void Graph::dfs(const std::string& startName) const {
     std::cout << "DFS from " << startName << ": ";
     while (!st.empty()) {
         int u = st.top(); st.pop();
-        if (visited[u]) continue;
+        if (visited[u]) {
+            continue;
+        }
         visited[u] = true;
         std::cout << buildings[u].name << " ";
         for (auto [v, w] : adj[u]) {
             (void)w;
-            if (!visited[v]) st.push(v);
+            if (!visited[v]) {
+                st.push(v);
+            }
         }
     }
     std::cout << "\n";
@@ -158,8 +164,12 @@ void Graph::shortestPath(const std::string& from, const std::string& to) const {
 
     while (!pq.empty()) {
         auto [d, u] = pq.top(); pq.pop();
-        if (d != dist[u]) continue;
-        if (u == dst) break;
+        if (d != dist[u]) {
+            continue;
+        }
+        if (u == dst) {
+            break;
+        }
         for (auto [v, w] : adj[u]) {
             if (dist[u] != INF && dist[u] + w < dist[v]) {
                 dist[v] = dist[u] + w;

@@ -12,14 +12,16 @@ tabButtons.forEach((btn) => {
 
 const buildings = [];
 const nameToId = new Map();
-const adj = [];
-const paths = [];
+const adj = []; 
+const paths = []; 
 
 const overlay = document.getElementById("mapOverlay");
 const campImage = document.getElementById("campImage");
 
 function addBuilding(name, x = null, y = null) {
-  if (!name) return null;
+  if (!name) {
+    return null;
+  }
   if (nameToId.has(name)) {
     const idExisting = nameToId.get(name);
     const b = buildings[idExisting];
@@ -41,9 +43,13 @@ function addBuilding(name, x = null, y = null) {
 }
 
 function drawNode(id) {
-  if (!overlay) return;
+  if (!overlay) {
+    return;
+  }
   const b = buildings[id];
-  if (b.x === null || b.y === null) return;
+  if (b.x === null || b.y === null) {
+    return;
+  }
 
   const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
   circle.setAttribute("cx", b.x);
@@ -61,10 +67,14 @@ function drawNode(id) {
 }
 
 function drawEdge(u, v) {
-  if (!overlay) return;
+  if (!overlay) {
+    return;
+  }
   const b1 = buildings[u];
   const b2 = buildings[v];
-  if (b1.x === null || b2.x === null) return;
+  if (b1.x === null || b2.x === null) {
+    return;
+  }
 
   const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
   line.setAttribute("x1", b1.x);
@@ -76,7 +86,9 @@ function drawEdge(u, v) {
 }
 
 function addPath(from, to, distance) {
-  if (!from || !to) return;
+  if (!from || !to) {
+    return;
+  }
   const u = addBuilding(from);
   const v = addBuilding(to);
   const w = Number(distance);
@@ -87,6 +99,91 @@ function addPath(from, to, distance) {
 
   paths.push({ from, to, distance: weight });
   drawEdge(u, v);
+}
+
+function removePath(from, to) {
+  const u = nameToId.get(from);
+  const v = nameToId.get(to);
+  if (u === undefined || v === undefined) {
+    return 0;
+  }
+  adj[u] = adj[u].filter((e) => e.to !== v);
+  adj[v] = adj[v].filter((e) => e.to !== u);
+
+  const before = paths.length;
+  for (let i = paths.length - 1; i >= 0; i--) {
+    const p = paths[i];
+    if ((p.from === from && p.to === to) || (p.from === to && p.to === from)) {
+      paths.splice(i, 1);
+    }
+  }
+
+  while (overlay.firstChild) {
+    overlay.removeChild(overlay.firstChild);
+  }
+  buildings.forEach((b) => {
+    if (b.x != null && b.y != null) {
+      drawNode(b.id);
+    }
+  });
+
+  paths.forEach((p) => {
+    const idU = nameToId.get(p.from);
+    const idV = nameToId.get(p.to);
+    if (idU != null && idV != null) drawEdge(idU, idV);
+  });
+
+  return before - paths.length;
+}
+
+function removeBuilding(name) {
+  const id = nameToId.get(name);
+  if (id === undefined) {
+    return 0;
+  }
+  const b = buildings[id];
+  if (!b || b.removed) {
+    return 0;
+  }
+
+  b.removed = true;
+  nameToId.delete(name);
+
+  for (let i = paths.length - 1; i >= 0; i--) {
+    const p = paths[i];
+    if (p.from === name || p.to === name) {
+      paths.splice(i, 1);
+    }
+  }
+
+  adj[id] = [];
+
+  for (let u = 0; u < adj.length; u++) {
+    if (u === id) {
+      continue;
+    }
+    adj[u] = adj[u].filter((e) => e.to !== id);
+  }
+
+  while (overlay.firstChild){ 
+    overlay.removeChild(overlay.firstChild);
+  }
+
+  buildings.forEach((b) => {
+    if (b && !b.removed && b.x != null && b.y != null) {
+      drawNode(b.id);
+    }
+  });
+
+  paths.forEach((p) => {
+    const idU = nameToId.get(p.from);
+    const idV = nameToId.get(p.to);
+    if (idU != null && idV != null) {
+      drawEdge(idU, idV);
+    }
+  });
+
+  return 1;
 }
 
 if (campImage) {
@@ -263,6 +360,20 @@ document.getElementById("shortestBtn").addEventListener("click", () => {
   );
 });
 
+document.getElementById("removePathBtn").addEventListener("click", () => {
+  const from = document.getElementById("removePathFrom").value.trim();
+  const to = document.getElementById("removePathTo").value.trim();
+  const removed = removePath(from, to);
+  const outEl = document.getElementById("removePathOutput");
+  if (!from || !to) {
+    outEl.textContent = "Please enter both building names.";
+  } else if (removed === 0) {
+    outEl.textContent = `No path found between ${from} and ${to}.`;
+  } else {
+    outEl.textContent = `Removed ${removed} path(s) between ${from} and ${to} and redrew the map.`;
+  }
+});
+
 const courses = [];
 const scheduleByDay = {};
 
@@ -336,13 +447,16 @@ document.getElementById("addCourseBtn").addEventListener("click", () => {
   const timeRaw = document.getElementById("courseTime").value.trim();
   const ampm = document.getElementById("courseAmPm").value;
 
-  if (!code || !name || !daysStr || !timeRaw) return;
-
+  if (!code || !name || !daysStr || !timeRaw) {
+    return;
+  }
   const days = daysStr
     .split(",")
     .map((d) => d.trim())
     .filter((d) => d.length > 0);
-  if (days.length === 0) return;
+  if (days.length === 0) {
+    return;
+  }
 
   const time = `${timeRaw} ${ampm}`;
   addCourse({ code, name, days, time });
@@ -412,7 +526,9 @@ document.getElementById("searchCourseBtn").addEventListener("click", () => {
 
 document.getElementById("removeCourseBtn").addEventListener("click", () => {
   const code = document.getElementById("removeCourseCode").value.trim();
-  if (!code) return;
+  if (!code) {
+    return;
+  }
   const removed = removeCourseByCode(code);
   const outEl = document.getElementById("removeCourseOutput");
   if (removed === 0) {

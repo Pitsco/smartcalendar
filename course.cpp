@@ -7,23 +7,36 @@ static void merge(std::vector<Course>& arr, int l, int m, int r) {
     std::vector<Course> L(n1);
     std::vector<Course> R(n2);
 
-    for (int i = 0; i < n1; ++i) L[i] = arr[l + i];
-    for (int j = 0; j < n2; ++j) R[j] = arr[m + 1 + j];
+    for (int i = 0; i < n1; ++i) {
+        L[i] = arr[l + i];
+    }
+    
+    for (int j = 0; j < n2; ++j) {
+        R[j] = arr[m + 1 + j];
+    }
 
     int i = 0, j = 0, k = l;
+
     while (i < n1 && j < n2) {
         if (L[i].code <= R[j].code) {
             arr[k++] = L[i++];
-        } else {
+        } 
+        else {
             arr[k++] = R[j++];
         }
     }
-    while (i < n1) arr[k++] = L[i++];
-    while (j < n2) arr[k++] = R[j++];
+    while (i < n1) {
+        arr[k++] = L[i++];
+    }
+    while (j < n2) {
+        arr[k++] = R[j++];
+    }
 }
 
 void mergeSort(std::vector<Course>& arr, int l, int r) {
-    if (l >= r) return;
+    if (l >= r) {
+        return;
+    }
     int m = l + (r - l) / 2;
     mergeSort(arr, l, m);
     mergeSort(arr, m + 1, r);
@@ -35,8 +48,12 @@ int binarySearchCourse(const std::vector<Course>& arr, const std::string& code) 
     int r = static_cast<int>(arr.size()) - 1;
     while (l <= r) {
         int mid = l + (r - l) / 2;
-        if (arr[mid].code == code) return mid;
-        if (arr[mid].code < code) l = mid + 1;
+        if (arr[mid].code == code) {
+            return mid;
+        }
+        if (arr[mid].code < code) {
+            l = mid + 1;
+        }
         else r = mid - 1;
     }
     return -1;

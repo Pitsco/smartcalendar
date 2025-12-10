@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -17,6 +18,7 @@
   </nav>
 
   <main>
+    <!-- OVERVIEW -->
     <section id="overview" class="tab-section active">
       <h2>Project Overview</h2>
       <p>
@@ -38,9 +40,11 @@
       </p>
     </section>
 
+    <!-- CAMPUS MAP / GRAPH -->
     <section id="map" class="tab-section">
       <h2>Campus Map – Graph & Pathfinding</h2>
 
+      <!-- IMAGE + CLICKABLE MAP -->
       <div class="card full-width">
         <h3>Campus Map Image (click to place buildings)</h3>
         <div id="mapWrapper">
@@ -131,13 +135,32 @@
             Uses Dijkstra’s algorithm and a stack to rebuild the path.
           </p>
         </div>
+
+        <div class="card">
+          <h3>Remove Path</h3>
+          <label>
+            From
+            <input type="text" id="removePathFrom" placeholder="Dorm" />
+          </label>
+          <label>
+            To
+            <input type="text" id="removePathTo" placeholder="Gym" />
+          </label>
+          <button id="removePathBtn">Remove Path</button>
+          <pre id="removePathOutput" class="output"></pre>
+          <p class="hint">
+            Removes the edge from the graph and redraws the map overlay.
+          </p>
+        </div>
       </div>
     </section>
 
+    <!-- SCHEDULE & COURSES -->
     <section id="schedule" class="tab-section">
       <h2>Schedule & Courses</h2>
 
       <div class="grid">
+        <!-- ADD COURSE -->
         <div class="card">
           <h3>Add Course</h3>
           <label>
@@ -168,6 +191,7 @@
           </p>
         </div>
 
+        <!-- SHOW SCHEDULE -->
         <div class="card">
           <h3>Show Schedule for a Day</h3>
           <label>
@@ -178,6 +202,7 @@
           <pre id="dayScheduleOutput" class="output"></pre>
         </div>
 
+        <!-- SORT + SEARCH -->
         <div class="card">
           <h3>All Courses (Merge Sort + Binary Search)</h3>
           <button id="listCoursesSortedBtn">List Sorted Courses</button>
@@ -191,6 +216,7 @@
           <pre id="searchCourseOutput" class="output"></pre>
         </div>
 
+        <!-- REMOVE COURSE -->
         <div class="card">
           <h3>Remove Course</h3>
           <label>

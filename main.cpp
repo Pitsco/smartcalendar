@@ -38,8 +38,12 @@ int main() {
     int choice;
     while (true) {
         printMenu();
-        if (!(std::cin >> choice)) break;
-        if (choice == 0) break;
+        if (!(std::cin >> choice)) {
+            break;
+        }
+        if (choice == 0) {
+            break;
+        }
 
         if (choice == 1) {
             std::string name;
