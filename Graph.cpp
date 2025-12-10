@@ -4,7 +4,7 @@
 #include <stack>
 #include <limits>
 #include <functional>
-#include <algorithm>   // for std::remove_if
+#include <algorithm>
 
 Graph::Graph() {}
 
@@ -71,7 +71,6 @@ void Graph::listPaths() const {
     bool any = false;
     for (std::size_t u = 0; u < adj.size(); ++u) {
         for (auto [v, w] : adj[u]) {
-            // undirected graph: only print each edge once
             if (u < static_cast<std::size_t>(v)) {
                 any = true;
                 std::cout << "  " << buildings[u].name << " <-> "

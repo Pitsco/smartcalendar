@@ -31,7 +31,6 @@ int main() {
     CourseBST bst;
     std::vector<Course> allCourses;
 
-    // sample data
     graph.addPath("Library", "Cafeteria", 5);
     graph.addPath("Library", "Gym", 7);
     graph.addPath("Gym", "Dorm", 3);

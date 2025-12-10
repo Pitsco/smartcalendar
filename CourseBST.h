@@ -26,8 +26,8 @@ public:
     ~CourseBST();
 
     void insert(const Course& c);
-    CourseNode* search(const std::string& code) const;  // <- important: const
+    CourseNode* search(const std::string& code) const;
     void printInOrder() const;
 };
 
-#endif // COURSEBST_H
+#endif

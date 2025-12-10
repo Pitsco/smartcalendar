@@ -12,17 +12,67 @@ tabButtons.forEach((btn) => {
 
 const buildings = [];
 const nameToId = new Map();
-const adj = []; 
-const paths = []; 
+const adj = [];
+const paths = [];
 
-function addBuilding(name) {
+const overlay = document.getElementById("mapOverlay");
+const campImage = document.getElementById("campImage");
+
+function addBuilding(name, x = null, y = null) {
   if (!name) return null;
-  if (nameToId.has(name)) return nameToId.get(name);
+  if (nameToId.has(name)) {
+    const idExisting = nameToId.get(name);
+    const b = buildings[idExisting];
+    if (b.x === null && x !== null) {
+      b.x = x;
+      b.y = y;
+      drawNode(idExisting);
+    }
+    return idExisting;
+  }
   const id = buildings.length;
-  buildings.push({ id, name });
+  buildings.push({ id, name, x, y });
   nameToId.set(name, id);
   adj.push([]);
+  if (x !== null && y !== null) {
+    drawNode(id);
+  }
   return id;
+}
+
+function drawNode(id) {
+  if (!overlay) return;
+  const b = buildings[id];
+  if (b.x === null || b.y === null) return;
+
+  const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  circle.setAttribute("cx", b.x);
+  circle.setAttribute("cy", b.y);
+  circle.setAttribute("r", 6);
+  circle.setAttribute("class", "map-node");
+  overlay.appendChild(circle);
+
+  const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  text.setAttribute("x", b.x + 8);
+  text.setAttribute("y", b.y - 8);
+  text.setAttribute("class", "map-label");
+  text.textContent = b.name;
+  overlay.appendChild(text);
+}
+
+function drawEdge(u, v) {
+  if (!overlay) return;
+  const b1 = buildings[u];
+  const b2 = buildings[v];
+  if (b1.x === null || b2.x === null) return;
+
+  const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  line.setAttribute("x1", b1.x);
+  line.setAttribute("y1", b1.y);
+  line.setAttribute("x2", b2.x);
+  line.setAttribute("y2", b2.y);
+  line.setAttribute("class", "map-edge");
+  overlay.appendChild(line);
 }
 
 function addPath(from, to, distance) {
@@ -31,9 +81,25 @@ function addPath(from, to, distance) {
   const v = addBuilding(to);
   const w = Number(distance);
   const weight = Number.isNaN(w) ? 0 : w;
+
   adj[u].push({ to: v, weight });
   adj[v].push({ to: u, weight });
+
   paths.push({ from, to, distance: weight });
+  drawEdge(u, v);
+}
+
+if (campImage) {
+  campImage.addEventListener("click", (e) => {
+    const rect = campImage.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const name = prompt("Building name for this point?");
+    if (!name) return;
+
+    addBuilding(name.trim(), x, y);
+  });
 }
 
 function bfs(startName) {
@@ -153,7 +219,13 @@ document.getElementById("addPathBtn").addEventListener("click", () => {
 });
 
 document.getElementById("listBuildingsBtn").addEventListener("click", () => {
-  const out = buildings.map((b) => `[${b.id}] ${b.name}`).join("\n");
+  const out = buildings
+    .map((b) =>
+      b.x === null
+        ? `[${b.id}] ${b.name}`
+        : `[${b.id}] ${b.name} (x=${Math.round(b.x)}, y=${Math.round(b.y)})`
+    )
+    .join("\n");
   document.getElementById("buildingsOutput").textContent =
     out || "No buildings yet.";
 });
@@ -273,7 +345,6 @@ document.getElementById("addCourseBtn").addEventListener("click", () => {
   if (days.length === 0) return;
 
   const time = `${timeRaw} ${ampm}`;
-
   addCourse({ code, name, days, time });
 
   document.getElementById("courseCode").value = "";

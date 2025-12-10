@@ -88,6 +88,11 @@ h2 {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
 }
 
+.card.full-width {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 .card h3 {
   margin-top: 0;
 }
@@ -165,6 +170,50 @@ button:active {
   border: 1px solid #374151;
   background: #020617;
   color: #e5e7eb;
+}
+
+/* Map image + overlay */
+#mapWrapper {
+  position: relative;
+  max-width: 800px;
+  margin-top: 0.75rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid #1f2937;
+}
+
+#campImage {
+  width: 100%;
+  display: block;
+}
+
+#mapOverlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* allow clicking through to image */
+}
+
+.map-node {
+  fill: #f97316;
+  stroke: #fbbf24;
+  stroke-width: 2;
+}
+
+.map-edge {
+  stroke: #38bdf8;
+  stroke-width: 2;
+  opacity: 0.8;
+}
+
+.map-label {
+  fill: #e5e7eb;
+  font-size: 10px;
+  paint-order: stroke;
+  stroke: #020617;
+  stroke-width: 2px;
+  stroke-linejoin: round;
 }
 
 footer {

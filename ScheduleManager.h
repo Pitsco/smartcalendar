@@ -8,7 +8,7 @@
 
 class ScheduleManager {
 private: 
-    std::unordered_map<std::string, std::list<Course>> scheduleByDay; //linked list
+    std::unordered_map<std::string, std::list<Course>> scheduleByDay;
 
 public:
     void addCourse(const Course& c);
